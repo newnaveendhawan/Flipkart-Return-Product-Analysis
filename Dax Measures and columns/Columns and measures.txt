@@ -1,0 +1,431 @@
+-- =====================================
+-- Flipkart Product Returns DAX Measures & Columns
+-- Optimized for 3 Lakh Rows & 25+ Columns
+-- Grouped by Business Domain
+-- =====================================
+
+-- ============================
+-- 💰 Revenue & Sales Metrics
+-- ============================
+Total_Revenue = 
+    SUMX('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ProductPrice] * 'Flipkart_Product_Returns'[Quantity])
+
+Total_Discount = 
+    SUMX('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[DiscountApplied] * 'Flipkart_Product_Returns'[Quantity])
+
+Net_Revenue = 
+    [Total_Revenue] - [Total_Discount]
+
+Returned_Revenue = 
+    SUMX(
+        FILTER('Flipkart_Product_Returns', NOT(ISBLANK('Flipkart_Product_Returns'[ReturnDate]))),
+        'Flipkart_Product_Returns'[ProductPrice] * 'Flipkart_Product_Returns'[Quantity]
+    )
+
+Net_Revenue_After_Returns = 
+    [Net_Revenue] - [Returned_Revenue]
+
+Average_Order_Revenue = 
+    DIVIDE([Total_Revenue], [Total_Orders])
+
+Average_Unit_Revenue = 
+    AVERAGE('Flipkart_Product_Returns'[ProductPrice])
+
+Average_Discount_Percentage = 
+    AVERAGE('Flipkart_Product_Returns'[DiscountApplied])
+
+Return_Revenue_Percentage = 
+    DIVIDE([Returned_Revenue], [Total_Revenue])
+
+-- ============================
+-- 📦 Order & Return Metrics
+-- ============================
+Total_Orders = 
+    COUNTROWS('Flipkart_Product_Returns')
+
+Total_Returns = 
+    COUNTROWS(FILTER('Flipkart_Product_Returns', NOT(ISBLANK('Flipkart_Product_Returns'[ReturnDate]))))
+
+Return_Rate = 
+    DIVIDE([Total_Returns], [Total_Orders])
+
+Return_Probability_Score = 
+    DIVIDE([Total_Returns], [Total_Orders])
+
+Weekend_Return_Rate = 
+    DIVIDE(
+        COUNTROWS(
+            FILTER('Flipkart_Product_Returns', WEEKDAY('Flipkart_Product_Returns'[ReturnDate], 2) IN {6, 7})
+        ),
+        [Total_Returns]
+    )
+
+Returns_This_Month = 
+    CALCULATE(
+        [Total_Returns],
+        FILTER(
+            'Flipkart_Product_Returns',
+            MONTH('Flipkart_Product_Returns'[ReturnDate]) = MONTH(TODAY()) &&
+            YEAR('Flipkart_Product_Returns'[ReturnDate]) = YEAR(TODAY())
+        )
+    )
+
+-- ============================
+-- 📊 Category & Reason Trends
+-- ============================
+Returns_By_Reason = 
+    CALCULATE(
+        COUNTROWS('Flipkart_Product_Returns'),
+        ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ReturnReason])
+    )
+
+Return_Rate_By_Payment = 
+    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[PaymentMethod]))
+
+Return_Rate_By_Hour = 
+    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Return_Hour]))
+
+Return_Rate_By_State = 
+    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[State]))
+
+Return_Rate_By_City = 
+    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[City]))
+
+Return_Rate_By_AgeGroup = 
+    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Age_Group]))
+
+Return_Rate_By_Gender = 
+    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[CustomerGender]))
+
+Monthly_Returns_By_Category = 
+    CALCULATE([Total_Returns], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Category], 'Flipkart_Product_Returns'[ReturnDate]))
+
+Return_Reason_Impact = 
+    SUMX(
+        FILTER('Flipkart_Product_Returns', NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate])),
+        'Flipkart_Product_Returns'[ProductPrice] * 'Flipkart_Product_Returns'[Quantity]
+    )
+
+Return_Impact_By_Reason = 
+    CALCULATE([Return_Reason_Impact], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ReturnReason]))
+
+-- ============================
+-- 🚚 Shipping & Delivery Metrics
+-- ============================
+
+Avg_Delivery_Days = 
+AVERAGEX(
+    'Flipkart_Product_Returns',
+    DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY)
+)
+
+Avg_Return_Days = 
+AVERAGEX(
+    FILTER('Flipkart_Product_Returns', NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate])),
+    DATEDIFF('Flipkart_Product_Returns'[DeliveryDate], 'Flipkart_Product_Returns'[ReturnDate], DAY)
+)
+
+
+Max_Delivery_Delay = 
+MAXX(
+    'Flipkart_Product_Returns',
+    DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY)
+)
+
+
+Min_Delivery_Delay = 
+MINX(
+    'Flipkart_Product_Returns',
+    DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY)
+)
+
+On_Time_Delivery_Rate = 
+    DIVIDE(
+        COUNTROWS(
+            FILTER('Flipkart_Product_Returns', DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY) <= 3)
+        ),
+        [Total_Orders]
+    )
+
+Quick_Return_Rate = 
+    DIVIDE(
+        COUNTROWS(
+            FILTER('Flipkart_Product_Returns', DATEDIFF('Flipkart_Product_Returns'[DeliveryDate], 'Flipkart_Product_Returns'[ReturnDate], DAY) <= 2)
+        ),
+        [Total_Returns]
+    )
+
+Express_Shipping_Return_Rate = 
+    DIVIDE(
+        COUNTROWS(FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ShippingMode] = "Express" && NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate]))),
+        COUNTROWS(FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ShippingMode] = "Express"))
+    )
+
+Shipping_Mode_Return_Comparison = 
+    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ShippingMode]))
+
+Shipping_Cost_Impact = 
+    DIVIDE([Returned_Revenue], CALCULATE(COUNTROWS('Flipkart_Product_Returns'), 'Flipkart_Product_Returns'[ShippingMode] = "Express"))
+
+-- ============================
+-- 🧍 Customer Metrics
+-- ============================
+Average_Customer_Age = 
+    AVERAGE('Flipkart_Product_Returns'[CustomerAge])
+
+Customer_Purchase_Score = 
+    AVERAGE('Flipkart_Product_Returns'[CustomerPurchaseHistory])
+
+Customer_Return_Score = 
+    AVERAGE('Flipkart_Product_Returns'[CustomerReturnHistory])
+
+Customer_Loyalty_Index = 
+VAR Purchases = AVERAGE('Flipkart_Product_Returns'[CustomerPurchaseHistory])
+VAR Returns = AVERAGE('Flipkart_Product_Returns'[CustomerReturnHistory])
+RETURN DIVIDE(Purchases, Returns)
+
+High_Risk_Customer_Count = 
+    CALCULATE(
+        DISTINCTCOUNT('Flipkart_Product_Returns'[OrderID]),
+        FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Customer_Risk_Index] > 0.4)
+    )
+
+Repeat_Customers = 
+    CALCULATE(
+        DISTINCTCOUNT('Flipkart_Product_Returns'[OrderID]),
+        'Flipkart_Product_Returns'[CustomerPurchaseHistory] > 10
+    )
+
+-- ============================
+-- 📈 Product Rating Metrics
+-- ============================
+Average_Product_Rating = 
+    AVERAGE('Flipkart_Product_Returns'[ProductRating])
+
+Low_Rated_Returns = 
+    CALCULATE(COUNTROWS('Flipkart_Product_Returns'), 'Flipkart_Product_Returns'[ProductRating] < 2)
+
+Top_Products_By_Sales = 
+        5,
+        SUMMARIZE('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Product_Name], "Sales", SUM('Flipkart_Product_Returns'[ProductPrice])),
+        [Sales], DESC
+    )-------------------------------------------------------------------------------------------------------------
+    TOPN(
+
+Top_Returned_Products = 
+    TOPN(
+        5,
+        SUMMARIZE(
+            FILTER('Flipkart_Product_Returns', NOT(ISBLANK('Flipkart_Product_Returns'[ReturnDate]))),
+            'Flipkart_Product_Returns'[Product_Name],
+            "Returns", COUNTROWS('Flipkart_Product_Returns')
+        ),
+        [Returns], DESC
+    )---------------------------------------------------------------------------------------------
+
+High_Rating_Return_Conflict = 
+    CALCULATE(COUNTROWS('Flipkart_Product_Returns'), 'Flipkart_Product_Returns'[High_Rating_High_Return_Flag] = 1)
+-- ============================
+-- 🧮 Risk & Discount Segments
+-- ============================
+High_Risk_Returns = 
+    CALCULATE(COUNTROWS('Flipkart_Product_Returns'), 'Flipkart_Product_Returns'[Return_Risk] = 1)
+
+High_Risk_Return_Rate = 
+    DIVIDE([High_Risk_Returns], [Total_Returns])
+
+High_Discount_Returns = 
+    CALCULATE(COUNTROWS('Flipkart_Product_Returns'),
+        FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[DiscountApplied] > 40 && NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate]))
+    )
+
+Return_Rate_High_Discount = 
+    DIVIDE([High_Discount_Returns], COUNTROWS(FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[DiscountApplied] > 40)))
+
+Warranty_Return_Rate = 
+    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Product_Warranty]))
+
+Warranty_Normalized_Returns = 
+    DIVIDE([Total_Returns], CALCULATE(COUNTROWS('Flipkart_Product_Returns'), 'Flipkart_Product_Returns'[Product_Warranty] <> BLANK()))
+
+Weighted_Return_Score = 
+    DIVIDE(
+        SUMX(
+            'Flipkart_Product_Returns',
+            'Flipkart_Product_Returns'[Return_Risk] * 'Flipkart_Product_Returns'[Quantity] * 'Flipkart_Product_Returns'[ProductPrice]
+        ),
+        [Total_Revenue]
+    )
+
+
+-- ============================
+-- 🧩 Calculated Columns
+-- ============================
+
+Age_Bin = SWITCH(
+    TRUE(),
+    'Flipkart_Product_Returns'[CustomerAge] < 25, "1–24",
+    'Flipkart_Product_Returns'[CustomerAge] < 30, "25–29",
+    'Flipkart_Product_Returns'[CustomerAge] < 35, "30–34",
+    'Flipkart_Product_Returns'[CustomerAge] < 40, "35–39",
+    'Flipkart_Product_Returns'[CustomerAge] < 50, "40–49",
+    'Flipkart_Product_Returns'[CustomerAge] < 60, "50–59",
+    ">60"
+)
+
+Age_Group = 
+    SWITCH(TRUE(),
+        'Flipkart_Product_Returns'[CustomerAge] < 20, "Teen",
+        'Flipkart_Product_Returns'[CustomerAge] < 30, "Young Adult",
+        'Flipkart_Product_Returns'[CustomerAge] < 45, "Adult",
+        'Flipkart_Product_Returns'[CustomerAge] < 60, "Middle-aged",
+        "Senior")
+
+Customer_Risk_Index = 
+    DIVIDE('Flipkart_Product_Returns'[CustomerReturnHistory], 'Flipkart_Product_Returns'[CustomerPurchaseHistory])
+
+Customer_Segment = 
+SWITCH(
+    TRUE(),
+    'Flipkart_Product_Returns'[CustomerPurchaseHistory] > 50, "Loyal",
+    'Flipkart_Product_Returns'[CustomerReturnHistory] > 30, "Frequent Returner",
+    "Average"
+)
+
+Customer_Type = 
+    IF('Flipkart_Product_Returns'[CustomerPurchaseHistory] > 50, "Loyal",
+        IF('Flipkart_Product_Returns'[CustomerReturnHistory] > 30, "High Returner", "Occasional"))
+
+CustomQuarter = 
+SWITCH(TRUE(),
+    'Flipkart_Product_Returns'[OrderDate] >= DATE(2024, 1, 1) && 'Flipkart_Product_Returns'[OrderDate] <= DATE(2024, 3, 31), "Q1",
+    'Flipkart_Product_Returns'[OrderDate] >= DATE(2024, 4, 1) && 'Flipkart_Product_Returns'[OrderDate] <= DATE(2024, 6, 30), "Q2",
+    'Flipkart_Product_Returns'[OrderDate] >= DATE(2024, 7, 1) && 'Flipkart_Product_Returns'[OrderDate] <= DATE(2024, 9, 30), "Q3",
+    'Flipkart_Product_Returns'[OrderDate] >= DATE(2024, 10, 1) && 'Flipkart_Product_Returns'[OrderDate] <= DATE(2025, 12, 31), "Q4",
+    "Other"
+)
+
+
+Discount_Range = 
+    SWITCH(TRUE(),
+        'Flipkart_Product_Returns'[DiscountApplied] <= 10, "0-10%",
+        'Flipkart_Product_Returns'[DiscountApplied] <= 30, "11-30%",
+        'Flipkart_Product_Returns'[DiscountApplied] <= 50, "31-50%",
+        "Above 50%")
+
+
+FestivalMonth = 
+IF(
+    MONTH('Flipkart_Product_Returns'[OrderDate]) IN {10, 11},
+    "Festival",
+    "Non-Festival"
+)
+
+High_Rating_High_Return_Flag = 
+    IF(
+        'Flipkart_Product_Returns'[ProductRating] >= 4 && NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate]),
+        1,
+        0
+    )
+
+Hr_grp = 
+SWITCH(TRUE(),
+    HOUR('Flipkart_Product_Returns'[OrderTime]) >= 6 && HOUR('Flipkart_Product_Returns'[OrderTime]) < 12, "Morning",
+    HOUR('Flipkart_Product_Returns'[OrderTime]) >= 12 && HOUR('Flipkart_Product_Returns'[OrderTime]) < 17, "Afternoon",
+    HOUR('Flipkart_Product_Returns'[OrderTime]) >= 17 && HOUR('Flipkart_Product_Returns'[OrderTime]) < 21, "Evening",
+    "Night"
+)
+
+Order_Hour = 
+    HOUR('Flipkart_Product_Returns'[OrderTime])
+
+Rating_Level = 
+    SWITCH(TRUE(),
+        'Flipkart_Product_Returns'[ProductRating] >= 4.0, "Excellent",
+        'Flipkart_Product_Returns'[ProductRating] >= 3.0, "Good",
+        'Flipkart_Product_Returns'[ProductRating] >= 2.0, "Average",
+        "Poor")
+
+return_delay = 
+DATEDIFF('Flipkart_Product_Returns'[DeliveryDate], 'Flipkart_Product_Returns'[ReturnDate], DAY)
+
+Return_Duration_Days = 
+    DATEDIFF('Flipkart_Product_Returns'[DeliveryDate], 'Flipkart_Product_Returns'[ReturnDate], DAY)
+Return_Hour = 
+    HOUR('Flipkart_Product_Returns'[ReturnTime])
+
+Return_Reason_Category = 
+    SWITCH(TRUE(),
+        SEARCH("Defective", 'Flipkart_Product_Returns'[ReturnReason], 1, 0) > 0, "Defective",
+        SEARCH("Wrong", 'Flipkart_Product_Returns'[ReturnReason], 1, 0) > 0, "Wrong Item",
+        SEARCH("Size", 'Flipkart_Product_Returns'[ReturnReason], 1, 0) > 0, "Size Issue",
+        "Others")
+
+Returner Type = 
+IF('Flipkart_Product_Returns'[return_delay] > 3, "Returner", "Non-Returner")
+
+Risk_Label = 
+    IF('Flipkart_Product_Returns'[Return_Risk] = 1, "High Risk", "Low Risk")
+
+Sales = 
+ROUND(
+    'Flipkart_Product_Returns'[ProductPrice] * 'Flipkart_Product_Returns'[Quantity] * (1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100),
+    2
+)
+
+
+
+Total_Order_Return_Lifecycle_Days = 
+    DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[ReturnDate], DAY)
+
+WeekDays_or_Weekend = 
+SWITCH(WEEKDAY('Flipkart_Product_Returns'[OrderDate], 2),
+    6, "Weekend",
+    7, "Weekend",
+    "Weekday"
+)
+
+Tier = 
+SWITCH(
+    TRUE(),
+    'Flipkart_Product_Returns'[City] IN {
+        
+        "Mumbai", "Delhi", "Bengaluru", "Bangalore", "Chennai", "Kolkata",
+        "Hyderabad", "Ahmedabad", "Pune"
+    }, "Tier 1",
+    'Flipkart_Product_Returns'[City] IN {
+        // Tier 2 Cities (Significant Regional Hubs & Emerging Markets)
+        "Jaipur", "Surat", "Lucknow", "Chandigarh", "Indore", "Kochi",
+        "Nagpur", "Visakhapatnam", "Coimbatore", "Bhopal", "Amritsar",
+        "Vadodara", "Ghaziabad", "Faridabad", "Patna", "Mysuru",
+        "Thiruvananthapuram", "Nashik", "Vijayawada", "Ludhiana",
+        "Agra", "Gwalior", "Varanasi", "Jamshedpur", "Prayagraj", "Ranchi",
+        "Madurai", "Raipur", "Kanpur", "Dehradun", "Jabalpur", "Aurangabad",
+        "Meerut", "Srinagar", "Guwahati", "Bhubaneswar", "Rourkela",
+        "Thrissur", "Udaipur", "Jodhpur", "Bilaspur", "Dhanbad",
+        "Tiruchirappalli", "Salem", "Kozhikode", "Puducherry", "Cuttack",
+        "Puri", "Siliguri", "Gorakhpur", "Bareilly", "Moradabad", "Saharanpur",
+        "Amravati", "Solapur", "Kolhapur", "Nanded", "Akola", "Ahmednagar",
+        "Jhansi", "Jamnagar", "Bhavnagar", "Rajkot", "Ujjain", "Kurnool",
+        "Rajahmundry", "Kakinada", "Nizamabad", "Anantapur", "Erode",
+        "Thanjavur", "Tuticorin", "Nagercoil", "Vellore"
+    }, "Tier 2",
+    "Tier 3"
+)
+
+Sales_after_discount = 
+'Flipkart_Product_Returns'[ProductPrice] * 
+'Flipkart_Product_Returns'[Quantity] * 
+(1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100)
+
+
+Month_Year = FORMAT('Flipkart_Product_Returns'[OrderDate], "YYYY-MM")
+
+
+Month = FORMAT('Flipkart_Product_Returns'[OrderDate], "MMM")
+
+Month_N = MONTH('Flipkart_Product_Returns'[OrderDate])
+
+
+DeliveryDelay = 
+DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY)
