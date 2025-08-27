@@ -1,0 +1,15 @@
+relationship 9645a0e2-8dcc-40ae-a646-fccbb29e490f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Flipkart_Product_Returns.OrderDate
+	toColumn: LocalDateTable_e9aeb41c-9cf3-414e-b9ba-82925d783332.Date
+
+relationship d537abb5-b27f-427b-9a2f-1a074f582948
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Flipkart_Product_Returns.DeliveryDate
+	toColumn: LocalDateTable_7b2c9878-bcc5-4e58-9be0-6dc82e2074f8.Date
+
+relationship 586cc4f1-6457-43fb-a3b6-31d30f011862
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Flipkart_Product_Returns.ReturnDate
+	toColumn: LocalDateTable_0b019283-6dee-408b-98b2-895856894bac.Date
+

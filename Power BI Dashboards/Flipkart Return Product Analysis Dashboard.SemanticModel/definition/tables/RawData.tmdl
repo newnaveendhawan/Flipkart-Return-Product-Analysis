@@ -1,0 +1,43 @@
+table RawData
+	lineageTag: adc9034d-7d84-436d-9cb4-724e9e29a5a1
+
+	column OrderID
+		formatString: 0
+		lineageTag: a5e70819-d161-4afc-baa9-fb32d5b31a8b
+		summarizeBy: count
+		isNameInferred
+		sourceColumn: [OrderID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		lineageTag: 8a477734-6f1e-4819-81d3-ad13acd45aff
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month_N
+		formatString: 0
+		lineageTag: a076cdb7-f896-442d-ac22-d2393a7e7650
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month_N]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition RawData = calculated
+		mode: import
+		source = ```
+				SELECTCOLUMNS(
+				    'Flipkart_Product_Returns',
+				    "OrderID", 'Flipkart_Product_Returns'[OrderID],
+				    "Month", FORMAT('Flipkart_Product_Returns'[OrderDate], "MMM"),
+				    "Month_N", MONTH('Flipkart_Product_Returns'[OrderDate])
+				)
+				
+				```
+
+	annotation PBI_Id = 0f7225a6f828425ca57ab9af30246072
+

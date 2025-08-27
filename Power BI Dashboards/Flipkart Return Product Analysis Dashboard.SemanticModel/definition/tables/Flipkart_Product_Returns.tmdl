@@ -1,0 +1,618 @@
+table Flipkart_Product_Returns
+	lineageTag: b8177c4e-502c-46a9-b22c-0c3e2f042624
+
+	column OrderID
+		dataType: int64
+		formatString: 0
+		lineageTag: e378afac-ea7b-488d-8f2b-a976dc1ae0dd
+		summarizeBy: count
+		sourceColumn: OrderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8789496c-32e8-4e8b-a8ef-5b487cb7fdbd
+		summarizeBy: none
+		sourceColumn: OrderDate
+
+		variation Variation
+			isDefault
+			relationship: 9645a0e2-8dcc-40ae-a646-fccbb29e490f
+			defaultHierarchy: LocalDateTable_e9aeb41c-9cf3-414e-b9ba-82925d783332.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column OrderTime
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: a453dcb9-bd97-4b0b-9351-e6c98c071aea
+		summarizeBy: none
+		sourceColumn: OrderTime
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column DeliveryDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f91fe04b-2cab-4789-ac70-ae715ae5558d
+		summarizeBy: none
+		sourceColumn: DeliveryDate
+
+		variation Variation
+			isDefault
+			relationship: d537abb5-b27f-427b-9a2f-1a074f582948
+			defaultHierarchy: LocalDateTable_7b2c9878-bcc5-4e58-9be0-6dc82e2074f8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DeliveryTime
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 0f9bc760-2e7a-4ef9-9e52-7ec31a93b2d7
+		summarizeBy: none
+		sourceColumn: DeliveryTime
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column ReturnDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 26c34ce7-c0b7-4acf-86cf-6608a0fddb90
+		summarizeBy: none
+		sourceColumn: ReturnDate
+
+		variation Variation
+			isDefault
+			relationship: 586cc4f1-6457-43fb-a3b6-31d30f011862
+			defaultHierarchy: LocalDateTable_0b019283-6dee-408b-98b2-895856894bac.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ReturnTime
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 2ea04037-69c5-4b09-adf3-d2deb384cded
+		summarizeBy: none
+		sourceColumn: ReturnTime
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column ReturnReason
+		dataType: string
+		lineageTag: fd95ec42-7e71-4edd-8983-fe801ea8a6d0
+		summarizeBy: none
+		sourceColumn: ReturnReason
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product_Name
+		dataType: string
+		lineageTag: d0ca123a-18d1-41cd-ad94-15a3aec4ef63
+		summarizeBy: none
+		sourceColumn: Product_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 31c16eaf-fab2-4c13-b1d3-79640feb8210
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Company
+		dataType: string
+		lineageTag: 25eacefa-3c6e-4c06-98c1-f9d626d942cf
+		summarizeBy: none
+		sourceColumn: Company
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductPrice
+		dataType: double
+		lineageTag: 112f0728-08a5-49bf-adb6-d41691a83d63
+		summarizeBy: sum
+		sourceColumn: ProductPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 4b30a73d-304a-4c05-b87c-abe432d62184
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column PaymentMethod
+		dataType: string
+		lineageTag: d2d4fcb7-eee9-4a9b-b78e-0333e8087dda
+		summarizeBy: none
+		sourceColumn: PaymentMethod
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerAge
+		dataType: int64
+		formatString: 0
+		lineageTag: 537f8f5e-1b57-4972-b863-4d17cc82b8c2
+		summarizeBy: sum
+		sourceColumn: CustomerAge
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerGender
+		dataType: string
+		lineageTag: 09a14a5f-3f58-4d76-8b79-5731ba03c53a
+		summarizeBy: none
+		sourceColumn: CustomerGender
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 1bb1be5f-4816-4cae-9eef-0e9b6c51ea79
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: 690640e0-b412-4e4c-bb7f-37c094ddc49a
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerPurchaseHistory
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e542853-2db1-45cd-ba6c-2bad7bbd6ee7
+		summarizeBy: sum
+		sourceColumn: CustomerPurchaseHistory
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerReturnHistory
+		dataType: int64
+		formatString: 0
+		lineageTag: 8823c2a8-1f2c-49c1-89ce-92e4f8055e5f
+		summarizeBy: sum
+		sourceColumn: CustomerReturnHistory
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductRating
+		dataType: double
+		lineageTag: 1417197a-24cf-4d96-b805-e1dea4516f41
+		summarizeBy: sum
+		sourceColumn: ProductRating
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Product_Warranty
+		dataType: string
+		lineageTag: d938e0e9-d6ca-43b5-b2ed-e2babb69d550
+		summarizeBy: none
+		sourceColumn: Product_Warranty
+
+		annotation SummarizationSetBy = Automatic
+
+	column ShippingMode
+		dataType: string
+		lineageTag: 27f7b5c3-7e7a-457a-8ac8-deec11878c9c
+		summarizeBy: none
+		sourceColumn: ShippingMode
+
+		annotation SummarizationSetBy = Automatic
+
+	column DiscountApplied
+		dataType: double
+		lineageTag: 451655a0-9474-4c2f-9bd6-9c44ef17ca0b
+		summarizeBy: sum
+		sourceColumn: DiscountApplied
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Return_Risk
+		dataType: int64
+		formatString: 0
+		lineageTag: fd73e543-cd0c-4f00-acbf-0cecb497414c
+		summarizeBy: sum
+		sourceColumn: Return_Risk
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age_Bin =
+			SWITCH(
+			    TRUE(),
+			    'Flipkart_Product_Returns'[CustomerAge] < 25, "1–24",
+			    'Flipkart_Product_Returns'[CustomerAge] < 30, "25–29",
+			    'Flipkart_Product_Returns'[CustomerAge] < 35, "30–34",
+			    'Flipkart_Product_Returns'[CustomerAge] < 40, "35–39",
+			    'Flipkart_Product_Returns'[CustomerAge] < 50, "40–49",
+			    'Flipkart_Product_Returns'[CustomerAge] < 60, "50–59",
+			    ">60"
+			)
+		lineageTag: 9d42807b-ba5a-49f7-b071-241947c94b23
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age_Group = ```
+			
+			    SWITCH(TRUE(),
+			        'Flipkart_Product_Returns'[CustomerAge] < 20, "Teen",
+			        'Flipkart_Product_Returns'[CustomerAge] < 30, "Young Adult",
+			        'Flipkart_Product_Returns'[CustomerAge] < 45, "Adult",
+			        'Flipkart_Product_Returns'[CustomerAge] < 60, "Middle-aged",
+			        "Senior")
+			```
+		lineageTag: e3436b8b-9b30-4393-bb63-c7d206344546
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Customer_Risk_Index = ```
+			
+			    DIVIDE('Flipkart_Product_Returns'[CustomerReturnHistory], 'Flipkart_Product_Returns'[CustomerPurchaseHistory])
+			```
+		lineageTag: bf147d91-b36c-4023-8a51-68e8ad49d6d1
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Customer_Type = ```
+			
+			VAR Purchases = 'Flipkart_Product_Returns'[CustomerPurchaseHistory]
+			VAR Returns = 'Flipkart_Product_Returns'[CustomerReturnHistory]
+			VAR ReturnRatio = DIVIDE(Returns, Purchases, 0)
+			
+			RETURN
+			    SWITCH(TRUE(),
+			        Purchases < 10, "New or Infrequent",
+			        Purchases >= 10 && ReturnRatio < 0.3, "Loyal",
+			        Purchases >= 10 && ReturnRatio >= 0.3 && ReturnRatio < 0.8, "Occasional",
+			        Purchases >= 10 && ReturnRatio >= 0.8, "High Returner",
+			        "Unclassified"
+			    )
+			
+			```
+		lineageTag: f6d0cd94-da08-4efd-be1a-8cb06a9c5582
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomQuarter =
+			
+			SWITCH(TRUE(),
+			    'Flipkart_Product_Returns'[OrderDate] >= DATE(2024, 1, 1) && 'Flipkart_Product_Returns'[OrderDate] <= DATE(2024, 3, 31), "Q1",
+			    'Flipkart_Product_Returns'[OrderDate] >= DATE(2024, 4, 1) && 'Flipkart_Product_Returns'[OrderDate] <= DATE(2024, 6, 30), "Q2",
+			    'Flipkart_Product_Returns'[OrderDate] >= DATE(2024, 7, 1) && 'Flipkart_Product_Returns'[OrderDate] <= DATE(2024, 9, 30), "Q3",
+			    'Flipkart_Product_Returns'[OrderDate] >= DATE(2024, 10, 1) && 'Flipkart_Product_Returns'[OrderDate] <= DATE(2025, 12, 31), "Q4",
+			    "Other"
+			)
+		lineageTag: 103bffd8-aefd-4de1-8d38-7b4749e0adde
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Discount_Range = ```
+			
+			    SWITCH(TRUE(),
+			        'Flipkart_Product_Returns'[DiscountApplied] <= 10, "0-10%",
+			        'Flipkart_Product_Returns'[DiscountApplied] <= 30, "11-30%",
+			        'Flipkart_Product_Returns'[DiscountApplied] <= 50, "31-50%",
+			        "Above 50%")
+			```
+		lineageTag: afc7895d-65d8-4c2d-b173-e07380fc2285
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column FestivalMonth =
+			
+			IF(
+			    MONTH('Flipkart_Product_Returns'[OrderDate]) IN {10, 11},
+			    "Festival",
+			    "Non-Festival"
+			)
+		lineageTag: 8eab1b57-343c-4cc7-8e68-9954eb7d8d57
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column High_Rating_High_Return_Flag = ```
+			
+			    IF(
+			        'Flipkart_Product_Returns'[ProductRating] >= 4 && NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate]),
+			        1,
+			        0
+			    )
+			```
+		formatString: 0
+		lineageTag: f2fefd5f-338d-4195-956b-0820c359d75a
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hr_grp =
+			
+			SWITCH(TRUE(),
+			    HOUR('Flipkart_Product_Returns'[OrderTime]) >= 6 && HOUR('Flipkart_Product_Returns'[OrderTime]) < 12, "Morning",
+			    HOUR('Flipkart_Product_Returns'[OrderTime]) >= 12 && HOUR('Flipkart_Product_Returns'[OrderTime]) < 17, "Afternoon",
+			    HOUR('Flipkart_Product_Returns'[OrderTime]) >= 17 && HOUR('Flipkart_Product_Returns'[OrderTime]) < 21, "Evening",
+			    "Night"
+			)
+		lineageTag: 0e028ece-aefb-4847-a677-82ef52e2222c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Order_Hour = ```
+			
+			    HOUR('Flipkart_Product_Returns'[OrderTime])
+			```
+		formatString: 0
+		lineageTag: f39b1c6b-bc87-4a48-b338-4bb5a6c1cdd1
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rating_Level = ```
+			
+			    SWITCH(TRUE(),
+			        'Flipkart_Product_Returns'[ProductRating] >= 4.0, "Excellent",
+			        'Flipkart_Product_Returns'[ProductRating] >= 3.0, "Good",
+			        'Flipkart_Product_Returns'[ProductRating] >= 2.0, "Average",
+			        "Poor")
+			```
+		lineageTag: 2e041574-2322-4f54-a262-ca0ac8d237ab
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column return_delay =
+			
+			DATEDIFF('Flipkart_Product_Returns'[DeliveryDate], 'Flipkart_Product_Returns'[ReturnDate], DAY)
+		formatString: 0
+		lineageTag: d1ae21b1-4266-4585-92ad-84143c05b8d3
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Return_Duration_Days = ```
+			
+			    DATEDIFF('Flipkart_Product_Returns'[DeliveryDate], 'Flipkart_Product_Returns'[ReturnDate], DAY)
+			```
+		formatString: 0
+		lineageTag: aeadd664-bb5d-45db-9e5b-084c3366678e
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Return_Hour = ```
+			
+			    HOUR('Flipkart_Product_Returns'[ReturnTime])
+			```
+		formatString: 0
+		lineageTag: e20f5d47-90a5-45f6-a6a6-00d4de6b86b4
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Return_Reason_Category = ```
+			
+			    SWITCH(TRUE(),
+			        SEARCH("Defective", 'Flipkart_Product_Returns'[ReturnReason], 1, 0) > 0, "Defective",
+			        SEARCH("Wrong", 'Flipkart_Product_Returns'[ReturnReason], 1, 0) > 0, "Wrong Item",
+			        SEARCH("Size", 'Flipkart_Product_Returns'[ReturnReason], 1, 0) > 0, "Size Issue",
+			        "Others")
+			```
+		lineageTag: 361ec46e-6f2f-4ba5-82aa-3cd8fe8ed2bb
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Returner Type' = ```
+			
+			IF(
+			    ISBLANK('Flipkart_Product_Returns'[ReturnDate]),
+			    BLANK(),  -- No return happened, so no speed category
+			    IF('Flipkart_Product_Returns'[return_delay] <= 4, "Quick Returner", "Delayed Returner")
+			)
+			
+			```
+		lineageTag: 555147b1-b938-4a35-a199-5c6e0c775192
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Risk_Label = ```
+			
+			    IF('Flipkart_Product_Returns'[Return_Risk] = 1, "High Risk", "Low Risk")
+			```
+		lineageTag: 61f4f082-bb42-4862-8173-76c0389bb350
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sales = ```
+			
+			'Flipkart_Product_Returns'[ProductPrice] * 'Flipkart_Product_Returns'[Quantity]
+			
+			```
+		lineageTag: 554f6577-4f0b-4530-b9a7-43e49ccf7ba0
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Total_Order_Return_Lifecycle_Days = ```
+			
+			    DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[ReturnDate], DAY)
+			```
+		formatString: 0
+		lineageTag: 95fc994d-67a1-455f-b816-834af49ad5d9
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tier = ```
+			
+			SWITCH(
+			    TRUE(),
+			    'Flipkart_Product_Returns'[City] IN {
+			        
+			        "Mumbai", "Delhi", "Bengaluru", "Bangalore", "Chennai", "Kolkata",
+			        "Hyderabad", "Ahmedabad", "Pune"
+			    }, "Tier 1",
+			    'Flipkart_Product_Returns'[City] IN {
+			        // Tier 2 Cities (Significant Regional Hubs & Emerging Markets)
+			        "Jaipur", "Surat", "Lucknow", "Chandigarh", "Indore", "Kochi",
+			        "Nagpur", "Visakhapatnam", "Coimbatore", "Bhopal", "Amritsar",
+			        "Vadodara", "Ghaziabad", "Faridabad", "Patna", "Mysuru",
+			        "Thiruvananthapuram", "Nashik", "Vijayawada", "Ludhiana",
+			        "Agra", "Gwalior", "Varanasi", "Jamshedpur", "Prayagraj", "Ranchi",
+			        "Madurai", "Raipur", "Kanpur", "Dehradun", "Jabalpur", "Aurangabad",
+			        "Meerut", "Srinagar", "Guwahati", "Bhubaneswar", "Rourkela",
+			        "Thrissur", "Udaipur", "Jodhpur", "Bilaspur", "Dhanbad",
+			        "Tiruchirappalli", "Salem", "Kozhikode", "Puducherry", "Cuttack",
+			        "Puri", "Siliguri", "Gorakhpur", "Bareilly", "Moradabad", "Saharanpur",
+			        "Amravati", "Solapur", "Kolhapur", "Nanded", "Akola", "Ahmednagar",
+			        "Jhansi", "Jamnagar", "Bhavnagar", "Rajkot", "Ujjain", "Kurnool",
+			        "Rajahmundry", "Kakinada", "Nizamabad", "Anantapur", "Erode",
+			        "Thanjavur", "Tuticorin", "Nagercoil", "Vellore"
+			    }, "Tier 2",
+			    "Tier 3"
+			)
+			```
+		lineageTag: 1c1cb343-6070-4df9-a3d9-a28805ed6c81
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekDays_or_Weekend =
+			
+			SWITCH(WEEKDAY('Flipkart_Product_Returns'[OrderDate], 2),
+			    6, "Weekend",
+			    7, "Weekend",
+			    "Weekday"
+			)
+		lineageTag: aed9aa35-f90c-474b-b715-72814ddc9d6d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sales_after_discount = ```
+			
+			'Flipkart_Product_Returns'[ProductPrice] * 
+			'Flipkart_Product_Returns'[Quantity] * 
+			(1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100)
+			
+			```
+		lineageTag: 87cff3d1-02b1-4cf7-ad46-70f80df920f4
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Month_Year = ```
+			FORMAT('Flipkart_Product_Returns'[OrderDate], "YYYY-MM")
+			
+			```
+		lineageTag: 6fdec2a8-4a11-4b69-b2bc-50cf44f6c3e5
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month = ```
+			FORMAT('Flipkart_Product_Returns'[OrderDate], "MMM")
+			
+			```
+		lineageTag: 0c94424e-c5a9-43e7-9b7a-b61d95278f1b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month_N = ```
+			MONTH('Flipkart_Product_Returns'[OrderDate])
+			
+			```
+		formatString: 0
+		lineageTag: ffb561a6-16e5-419f-9b1a-957422e0512c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryDelay = ```
+			
+			DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY)
+			
+			```
+		formatString: 0
+		lineageTag: ffefa0e8-5b6b-400b-bd41-8266315f5c26
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Return_Status = ```
+			
+			IF(
+			    ISBLANK('Flipkart_Product_Returns'[ReturnDate]),
+			    "Bought (Not Returned)",
+			    "Returned"
+			)
+			
+			```
+		lineageTag: a74934d7-64f1-4e9f-83cf-dc4e8635489e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Flipkart_Product_Returns = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\newna\OneDrive\Desktop\Flipkart Return Product Analysis\Dataset\Flipkart_Product_Return_Sheet.xlsx"), null, true),
+				    Flipkart_Product_Returns_Sheet = Source{[Item="Flipkart_Product_Returns",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Flipkart_Product_Returns_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"OrderID", Int64.Type}, {"OrderDate", type date}, {"OrderTime", type datetime}, {"DeliveryDate", type date}, {"DeliveryTime", type datetime}, {"ReturnDate", type date}, {"ReturnTime", type datetime}, {"ReturnReason", type text}, {"Product_Name", type text}, {"Category", type text}, {"Company", type text}, {"ProductPrice", type number}, {"Quantity", Int64.Type}, {"PaymentMethod", type text}, {"CustomerAge", Int64.Type}, {"CustomerGender", type text}, {"City", type text}, {"State", type text}, {"CustomerPurchaseHistory", Int64.Type}, {"CustomerReturnHistory", Int64.Type}, {"ProductRating", type number}, {"Product_Warranty", type text}, {"ShippingMode", type text}, {"DiscountApplied", type number}, {"Return_Risk", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

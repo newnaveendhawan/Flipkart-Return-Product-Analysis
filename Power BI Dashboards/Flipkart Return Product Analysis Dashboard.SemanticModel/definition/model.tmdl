@@ -1,0 +1,26 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Flipkart_Product_Returns"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.145.1262.0 (25.07)+10bdeda5ab0db954b2cf824e7a117ad7cee97f88
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table MeasuresTable
+ref table Flipkart_Product_Returns
+ref table DateTableTemplate_aa266460-0906-4c06-8934-4910560209ca
+ref table LocalDateTable_e9aeb41c-9cf3-414e-b9ba-82925d783332
+ref table LocalDateTable_7b2c9878-bcc5-4e58-9be0-6dc82e2074f8
+ref table LocalDateTable_0b019283-6dee-408b-98b2-895856894bac
+ref table RawData
+
+ref cultureInfo en-US
+

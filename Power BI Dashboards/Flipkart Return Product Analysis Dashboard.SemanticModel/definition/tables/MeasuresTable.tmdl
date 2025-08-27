@@ -1,0 +1,712 @@
+table MeasuresTable
+	lineageTag: 349b033d-c6a8-4f8a-acfb-edd3306cff3e
+
+	measure Total_Revenue = ```
+			
+			SUMX(
+			    'Flipkart_Product_Returns',
+			    'Flipkart_Product_Returns'[ProductPrice] * 'Flipkart_Product_Returns'[Quantity] * 
+			    (1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100)
+			)
+			
+			
+			```
+		lineageTag: cdb87f39-7b03-48b6-a29d-9c506c4a9368
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Total_Sales = ```
+			
+			    SUMX('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ProductPrice] * 'Flipkart_Product_Returns'[Quantity])                                                
+			
+			```
+		lineageTag: 472dc5b3-3599-4256-a85e-c52863157d14
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Total_Discount = ```
+			
+			SUMX(
+			    'Flipkart_Product_Returns',
+			    'Flipkart_Product_Returns'[ProductPrice] * 
+			    ('Flipkart_Product_Returns'[DiscountApplied] / 100) * 
+			    'Flipkart_Product_Returns'[Quantity]
+			)
+			
+			```
+		lineageTag: 05b66956-9f70-4f53-8c7f-00235e7412ab
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Net Revenue' = ```
+			
+			VAR TotalRevenue = 
+			    SUMX(
+			        'Flipkart_Product_Returns',
+			        'Flipkart_Product_Returns'[ProductPrice] * 
+			        (1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100) * 
+			        'Flipkart_Product_Returns'[Quantity]
+			    )
+			
+			VAR ReturnRevenue = 
+			    SUMX(
+			        FILTER(
+			            'Flipkart_Product_Returns',
+			            NOT(ISBLANK('Flipkart_Product_Returns'[ReturnDate]))
+			        ),
+			        'Flipkart_Product_Returns'[ProductPrice] * 
+			        (1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100) * 
+			        'Flipkart_Product_Returns'[Quantity]
+			    )
+			
+			RETURN TotalRevenue - ReturnRevenue
+			
+			```
+		lineageTag: 6ee8de42-0e4f-4519-a2ec-5053b16a0602
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Returned_Revenue = ```
+			
+			SUMX(
+			    FILTER(
+			        'Flipkart_Product_Returns',
+			        NOT(ISBLANK('Flipkart_Product_Returns'[ReturnDate]))
+			    ),
+			    'Flipkart_Product_Returns'[ProductPrice] * 
+			    (1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100) *
+			    'Flipkart_Product_Returns'[Quantity]
+			)
+			
+			
+			
+			```
+		lineageTag: 4f782485-e931-4319-a29a-2346f7e2434a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Total_Orders = ```
+			
+			    COUNTROWS('Flipkart_Product_Returns')
+			```
+		formatString: 0
+		lineageTag: 6fa844d6-764f-49dc-b9a9-c39b8c510d32
+
+	measure Average_Order_Revenue = ```
+			
+			    DIVIDE([Total_Revenue], [Total_Orders])
+			```
+		lineageTag: ac486e43-fe3d-47f9-ae74-11f24ae069d6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Average_Unit_Revenue = ```
+			
+			    AVERAGE('Flipkart_Product_Returns'[ProductPrice])
+			```
+		lineageTag: 51bf1508-4ece-4da7-97e0-68c3fba08f07
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Average_Discount_Percentage = ```
+			
+			    AVERAGE('Flipkart_Product_Returns'[DiscountApplied])
+			```
+		lineageTag: f957b8a1-1e84-4cb0-8915-7ce2a7e75699
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Return_Revenue_Percentage = ```
+			
+			    DIVIDE([Returned_Revenue], [Total_Revenue])
+			```
+		lineageTag: 19e00381-5d81-4c4d-873d-99ac3fcb944b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Total_Returns = ```
+			
+			    COUNTROWS(FILTER('Flipkart_Product_Returns', NOT(ISBLANK('Flipkart_Product_Returns'[ReturnDate]))))
+			```
+		formatString: 0
+		lineageTag: ce8f2ddc-68e1-4f49-bfd3-e8a1f12fe1d7
+
+	measure Return_Rate = ```
+			
+			    DIVIDE([Total_Returns], [Total_Orders])
+			```
+		lineageTag: 31551681-2450-468f-9d0a-cce38de4e123
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Return_Probability_Score = ```
+			
+			    DIVIDE([Total_Returns], [Total_Orders])
+			```
+		lineageTag: 314fa764-393b-4534-9448-47cbbb31c2d9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Weekend_Return_Rate = ```
+			
+			    DIVIDE(
+			        COUNTROWS(
+			            FILTER('Flipkart_Product_Returns', WEEKDAY('Flipkart_Product_Returns'[ReturnDate], 2) IN {6, 7})
+			        ),
+			        [Total_Returns]
+			    )
+			```
+		lineageTag: 88f22f13-25cf-460c-af30-de0f8384a595
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Returns_This_Month = ```
+			
+			    CALCULATE(
+			        [Total_Returns],
+			        FILTER(
+			            'Flipkart_Product_Returns',
+			            MONTH('Flipkart_Product_Returns'[ReturnDate]) = MONTH(TODAY()) &&
+			            YEAR('Flipkart_Product_Returns'[ReturnDate]) = YEAR(TODAY())
+			        )
+			    )
+			```
+		formatString: 0
+		lineageTag: 6afa8438-ca83-43d6-b65c-bdb20bb7ddce
+
+	measure Returns_By_Reason = ```
+			
+			    CALCULATE(
+			        COUNTROWS('Flipkart_Product_Returns'),
+			        ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ReturnReason])
+			    )
+			```
+		formatString: 0
+		lineageTag: 98c42e58-e93c-484b-ba1a-84f9bb600864
+
+	measure Return_Rate_By_Payment = ```
+			
+			    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[PaymentMethod]))
+			```
+		lineageTag: 407e09ee-4815-40d9-8ff7-d50597c6a01c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Return_Rate_By_State = ```
+			
+			    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[State]))
+			```
+		lineageTag: bd757232-2aa0-4fab-a36b-a4f7e83513dd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Return_Rate_By_City = ```
+			
+			    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[City]))
+			```
+		lineageTag: 00d7a124-3342-45f3-956a-be1af00d6575
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Return_Rate_By_Gender = ```
+			
+			    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[CustomerGender]))
+			```
+		lineageTag: 20863414-475d-4837-b5f0-11bfdfbf47a1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Monthly_Returns_By_Category = ```
+			
+			    CALCULATE([Total_Returns], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Category], 'Flipkart_Product_Returns'[ReturnDate]))
+			```
+		formatString: 0
+		lineageTag: 3b8e87e9-2a63-4d23-b685-de985616895a
+
+	measure Return_Reason_Impact = ```
+			
+			    SUMX(
+			        FILTER('Flipkart_Product_Returns', NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate])),
+			        'Flipkart_Product_Returns'[ProductPrice] * 'Flipkart_Product_Returns'[Quantity]
+			    )
+			```
+		lineageTag: f27dbf3f-5195-427d-9ac0-b9fbb41bf6b0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Return_Impact_By_Reason = ```
+			
+			    CALCULATE([Return_Reason_Impact], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ReturnReason]))
+			```
+		lineageTag: 57430f52-5344-49e0-b1bc-a48fe04c93d9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Avg_Delivery_Days =
+			
+			AVERAGEX(
+			    'Flipkart_Product_Returns',
+			    DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY)
+			)
+		lineageTag: 680470dc-bc8f-4a2f-97f8-8873b310aa68
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Avg_Return_Days =
+			
+			AVERAGEX(
+			    FILTER('Flipkart_Product_Returns', NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate])),
+			    DATEDIFF('Flipkart_Product_Returns'[DeliveryDate], 'Flipkart_Product_Returns'[ReturnDate], DAY)
+			)
+		lineageTag: c4631ccf-f8ee-467a-aed4-6a1805f76efd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Max_Delivery_Delay =
+			
+			MAXX(
+			    'Flipkart_Product_Returns',
+			    DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY)
+			)
+		formatString: 0
+		lineageTag: 344f8574-8688-477f-87f8-148d08b71489
+
+	measure Min_Delivery_Delay =
+			
+			MINX(
+			    'Flipkart_Product_Returns',
+			    DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY)
+			)
+		formatString: 0
+		lineageTag: 6d2c2922-82c4-4910-9d7f-ccd5a806ffcb
+
+	measure On_Time_Delivery_Rate = ```
+			
+			    DIVIDE(
+			        COUNTROWS(
+			            FILTER('Flipkart_Product_Returns', DATEDIFF('Flipkart_Product_Returns'[OrderDate], 'Flipkart_Product_Returns'[DeliveryDate], DAY) <= 3)
+			        ),
+			        [Total_Orders]
+			    )
+			```
+		lineageTag: ab135dc7-fd9f-44c9-aa7c-18c4ece02bcc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Quick_Return_Rate = ```
+			
+			    DIVIDE(
+			        COUNTROWS(
+			            FILTER('Flipkart_Product_Returns', DATEDIFF('Flipkart_Product_Returns'[DeliveryDate], 'Flipkart_Product_Returns'[ReturnDate], DAY) <= 2)
+			        ),
+			        [Total_Returns]
+			    )
+			```
+		lineageTag: f8517a31-119b-43fb-9998-a5e80007226e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Express_Shipping_Return_Rate = ```
+			
+			    DIVIDE(
+			        COUNTROWS(FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ShippingMode] = "Express" && NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate]))),
+			        COUNTROWS(FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ShippingMode] = "Express"))
+			    )
+			```
+		lineageTag: 6c061723-a3f5-4b56-83b5-16cb2e56ba56
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Shipping_Mode_Return_Comparison = ```
+			
+			    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[ShippingMode]))
+			```
+		lineageTag: e2475669-7b87-41d6-b17e-550c22f17495
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Shipping_Cost_Impact = ```
+			
+			    DIVIDE([Returned_Revenue], CALCULATE(COUNTROWS('Flipkart_Product_Returns'), 'Flipkart_Product_Returns'[ShippingMode] = "Express"))
+			```
+		lineageTag: 48dc5f04-44da-498d-a41a-93c6cac91b81
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Average_Customer_Age = ```
+			
+			    AVERAGE('Flipkart_Product_Returns'[CustomerAge])
+			```
+		lineageTag: d8ddff59-8adf-49e7-aa13-9e7cdaf723bf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Customer_Purchase_Score = ```
+			
+			    AVERAGE('Flipkart_Product_Returns'[CustomerPurchaseHistory])
+			```
+		lineageTag: 1b0899ff-fce6-44f9-bbb3-5a08f75aa556
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Customer_Return_Score = ```
+			
+			    AVERAGE('Flipkart_Product_Returns'[CustomerReturnHistory])
+			```
+		lineageTag: 82ff3014-202e-46ac-9109-831e7b001af0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Customer_Loyalty_Index =
+			
+			VAR Purchases = AVERAGE('Flipkart_Product_Returns'[CustomerPurchaseHistory])
+			VAR Returns = AVERAGE('Flipkart_Product_Returns'[CustomerReturnHistory])
+			RETURN DIVIDE(Purchases, Returns)
+		lineageTag: 57f35083-bef6-4981-910c-f64efa3e0bd6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Repeat_Orders = ```
+			
+			CALCULATE(
+			    COUNTROWS('Flipkart_Product_Returns'),
+			    FILTER(
+			        'Flipkart_Product_Returns',
+			        'Flipkart_Product_Returns'[CustomerPurchaseHistory] > 1
+			    )
+			)
+			
+			```
+		formatString: 0
+		lineageTag: bfb54391-ebd5-4068-bb62-f3c6a1d83881
+
+	measure Average_Product_Rating = ```
+			
+			    AVERAGE('Flipkart_Product_Returns'[ProductRating])
+			```
+		lineageTag: 30f47778-f77c-4175-9145-278086dca8d2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Low_Rated_Valid_Returns = ```
+			
+			CALCULATE(
+			    COUNTROWS('Flipkart_Product_Returns'),
+			    'Flipkart_Product_Returns'[ProductRating] < 2,
+			    NOT(ISBLANK('Flipkart_Product_Returns'[ReturnReason]))
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 53d9e6b6-50d5-488b-9906-54de0e00ef38
+
+	measure High_Risk_Returns = ```
+			
+			    CALCULATE(COUNTROWS('Flipkart_Product_Returns'), 'Flipkart_Product_Returns'[Return_Risk] = 1)
+			
+			```
+		formatString: 0
+		lineageTag: 3e309b2a-a6ac-4c7b-9b48-2bd2322b4548
+
+	measure High_Risk_Return_Rate = ```
+			
+			    DIVIDE([High_Risk_Returns], [Total_Returns])
+			```
+		lineageTag: d8c31ea5-9525-429b-854c-53b7fd691d52
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure High_Discount_Returns = ```
+			
+			    CALCULATE(COUNTROWS('Flipkart_Product_Returns'),
+			        FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[DiscountApplied] > 40 && NOT ISBLANK('Flipkart_Product_Returns'[ReturnDate]))
+			    )
+			```
+		formatString: 0
+		lineageTag: f9a66314-ea21-40f0-93c1-bc4058dd2ab2
+
+	measure Return_Rate_High_Discount = ```
+			
+			    DIVIDE([High_Discount_Returns], COUNTROWS(FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[DiscountApplied] > 40)))
+			```
+		lineageTag: 285213c7-2fbb-45ff-b42a-a63fe3f8e491
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Warranty_Return_Rate = ```
+			
+			    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Product_Warranty]))
+			
+			```
+		lineageTag: c232cb2c-33af-4f5e-95da-72b65cde63f9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Warranty_Normalized_Returns = ```
+			
+			    DIVIDE([Total_Returns], CALCULATE(COUNTROWS('Flipkart_Product_Returns'), 'Flipkart_Product_Returns'[Product_Warranty] <> BLANK()))
+			```
+		lineageTag: 1bd95f79-381f-4e9d-9333-a2cc867f953e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Weighted_Return_Score = ```
+			
+			    DIVIDE(
+			        SUMX(
+			            'Flipkart_Product_Returns',
+			            'Flipkart_Product_Returns'[Return_Risk] * 'Flipkart_Product_Returns'[Quantity] * 'Flipkart_Product_Returns'[ProductPrice]
+			        ),
+			        [Total_Sales]
+			    )
+			```
+		lineageTag: a5ed2e37-1581-492a-977e-201c66fc07f8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure High_Rating_Return_Conflict = ```
+			
+			    CALCULATE(COUNTROWS('Flipkart_Product_Returns'), 'Flipkart_Product_Returns'[High_Rating_High_Return_Flag] = 1)
+			```
+		formatString: 0
+		lineageTag: 2c6cd69e-a082-4acf-b8c0-90944c3c416e
+
+	measure High_Risk_Customer_Count = ```
+			
+			    CALCULATE(
+			        DISTINCTCOUNT('Flipkart_Product_Returns'[OrderID]),
+			        FILTER('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Customer_Risk_Index] > 0.4)
+			    )
+			```
+		formatString: 0
+		lineageTag: 8b48d537-d958-4a31-8462-9568f889b9e2
+
+	measure Return_Rate_By_AgeGroup = ```
+			
+			    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Age_Group]))
+			```
+		lineageTag: f4b05974-fb6b-4d06-88af-56fe6a3bb2f7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Return_Rate_By_Hour = ```
+			
+			    CALCULATE([Return_Rate], ALLEXCEPT('Flipkart_Product_Returns', 'Flipkart_Product_Returns'[Return_Hour]))
+			```
+		lineageTag: e3c12277-3a38-4d7a-b39f-acf788ecefa4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Orders = ```
+			COUNT('Flipkart_Product_Returns'[OrderID])
+			
+			```
+		formatString: 0
+		lineageTag: aa3de761-3634-4d1f-9c50-0ecaa923947c
+
+	measure Prev_Orders = CALCULATE([Orders], PREVIOUSMONTH('Flipkart_Product_Returns'[OrderDate]))
+		formatString: 0
+		lineageTag: c1647cdf-ea85-4d33-99d1-0e70710eb1e0
+
+	measure 'MOM Orders %' =
+			
+			VAR Cur = [Orders]
+			VAR Prev = CALCULATE([Orders], PREVIOUSMONTH('Flipkart_Product_Returns'[OrderDate]))
+			RETURN DIVIDE(Cur - Prev, Prev) * 100
+		lineageTag: d139776f-ed24-4fa9-86b7-2020750f73ef
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Prev Orders' = ```
+			
+			CALCULATE(
+			    [Total_Orders],
+			    PREVIOUSMONTH('Flipkart_Product_Returns'[OrderDate])
+			)
+			
+			```
+		formatString: 0
+		lineageTag: ee618fa9-c385-447a-b1fd-6ec4ede3e31b
+
+	measure Total_Revenue_After_Returns = ```
+			
+			VAR TotalRevenue = 
+			    SUMX(
+			        'Flipkart_Product_Returns',
+			        'Flipkart_Product_Returns'[ProductPrice] * 
+			        (1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100) * 
+			        'Flipkart_Product_Returns'[Quantity]
+			    )
+			
+			VAR ReturnRevenue = 
+			    SUMX(
+			        FILTER(
+			            'Flipkart_Product_Returns',
+			            NOT(ISBLANK('Flipkart_Product_Returns'[ReturnDate]))
+			        ),
+			        'Flipkart_Product_Returns'[ProductPrice] * 
+			        (1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100) * 
+			        'Flipkart_Product_Returns'[Quantity]
+			    )
+			
+			RETURN TotalRevenue - ReturnRevenue
+			
+			```
+		lineageTag: dae39bbd-cc9d-4aa8-94ff-01ea08a35207
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Average_Order_Value = ```
+			
+			    DIVIDE([Total_Sales], [Total_Orders])
+			
+			```
+		lineageTag: 14ab096e-7155-4a3a-9278-61e7c21f325f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure AOV_After_Returns = ```
+			
+			    DIVIDE([Total_Revenue_After_Returns], [Total_Orders])
+			
+			```
+		lineageTag: bc36fabe-a83f-4d75-bdde-f00b584bb78b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Total_Loss = ```
+			[Total_Discount] + [Returned_Revenue]
+			
+			```
+		lineageTag: 7d7904d8-383a-46e7-a1a0-82004194d488
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Return %' = ```
+			
+			DIVIDE(
+			    CALCULATE(COUNT('Flipkart_Product_Returns'[OrderID]), NOT(ISBLANK('Flipkart_Product_Returns'[ReturnDate]))),
+			    COUNT('Flipkart_Product_Returns'[OrderID])
+			) * 100
+			
+			```
+		lineageTag: 60866c82-6fab-4602-b0a1-eb5ae5a766d5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Returns =
+			
+			CALCULATE(COUNT('Flipkart_Product_Returns'[OrderID]), 'Flipkart_Product_Returns'[return_delay] > 0)
+		formatString: 0
+		lineageTag: 0800ea2a-2081-466d-a950-a2480da65db9
+
+	measure Measure
+		lineageTag: 80f091c3-149a-4af2-a0b3-6a2411ef6d45
+
+		annotation 43dbc3e8-3a1c-4b6f-9923-b49ff7d6691c = True
+
+	measure 'Return % 2' = DIVIDE([Returns], [Orders]) * 100
+		lineageTag: 6058e52a-e2d8-47c0-bdac-612570508ec0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CustomerPurchaseHistory = SUM('Flipkart_Product_Returns'[CustomerPurchaseHistory])
+		formatString: 0
+		lineageTag: 8fb62acb-66f8-49bb-83ad-7a91b1e5f8a9
+
+	measure CustomerReturnHistory = SUM('Flipkart_Product_Returns'[CustomerReturnHistory])
+		formatString: 0
+		lineageTag: 2ac19d1c-3d11-4cfd-abdc-bd3e45837364
+
+	measure 'MOM Sales %' =
+			
+			VAR Cur = [Total_Sales]
+			VAR Prev = CALCULATE([Total_Sales], PREVIOUSMONTH('Flipkart_Product_Returns'[OrderDate]))
+			RETURN DIVIDE(Cur - Prev, Prev) * 100
+		lineageTag: 6989a67a-b638-4ce3-ab05-41d55d4dbc5f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MOM Loss %' =
+			
+			VAR Cur = [Total_Loss]
+			VAR Prev = CALCULATE([Total_Loss], PREVIOUSMONTH('Flipkart_Product_Returns'[ReturnDate]))
+			RETURN DIVIDE(Cur - Prev, Prev) * 100
+		lineageTag: 6f082a56-4bca-4859-9984-30c0ad3e576b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MOM Return %' =
+			
+			VAR Cur = [Returns]
+			VAR Prev = CALCULATE([Returns], PREVIOUSMONTH('Flipkart_Product_Returns'[ReturnDate]))
+			RETURN DIVIDE(Cur - Prev, Prev) * 100
+		lineageTag: 5d277256-a778-49ed-9a4d-2bcb294d1df0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Return Delay' = AVERAGE('Flipkart_Product_Returns'[return_delay])
+		lineageTag: d7012b9b-ce65-49b2-a835-3411d0506c41
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loyalty Score' =
+			
+			DIVIDE([CustomerPurchaseHistory] - [CustomerReturnHistory], [CustomerPurchaseHistory])
+		lineageTag: 909c39e5-1ddb-42eb-a161-7d4d53a31da1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Most Returned Product' =
+			
+			TOPN(1, VALUES('Flipkart_Product_Returns'[Product_Name]), [Returns], DESC)
+		lineageTag: 5e730cd0-a324-42c5-9502-52a01b6d0b7d
+
+	measure 'Top Rated Product' =
+			
+			TOPN(1, VALUES('Flipkart_Product_Returns'[Product_Name]), [Average_Product_Rating], DESC)
+		lineageTag: 0f92bcb0-bbbb-4bbc-b3c8-937ef54c9cc5
+
+	measure 'Lowest Rated Product' = ```
+			
+			TOPN(1, VALUES('Flipkart_Product_Returns'[Product_Name]), [Average_Product_Rating], ASC)
+			
+			```
+		lineageTag: 5c1705fb-f939-403c-afad-6b3c690a98c8
+
+	measure Sales_after_Discount = ```
+			
+			SUMX(
+			    'Flipkart_Product_Returns',
+			    'Flipkart_Product_Returns'[ProductPrice] * 'Flipkart_Product_Returns'[Quantity] * 
+			    (1 - 'Flipkart_Product_Returns'[DiscountApplied] / 100)
+			)
+			
+			
+			```
+		lineageTag: b4b73a09-72d2-4620-a9c4-85e429cf8b93
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Name
+		lineageTag: 600f6cbe-61b3-4bda-830c-14a78d518dfc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MeasuresTable = calculated
+		mode: import
+		source = ```
+				DATATABLE(
+				    "Name", STRING,
+				    {
+				        {""}
+				    }
+				)
+				
+				```
+
+	annotation PBI_Id = 285d7926510542d382ecc955bc190839
+
